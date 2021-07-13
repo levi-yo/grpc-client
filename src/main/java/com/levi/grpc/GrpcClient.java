@@ -19,6 +19,12 @@ public class GrpcClient {
             .build()
     );
 
+    private final SampleServiceGrpc.SampleServiceBlockingStub blockingStub = SampleServiceGrpc.newBlockingStub(
+            ManagedChannelBuilder.forAddress(HOST, PORT)
+                    .usePlaintext()
+                    .build()
+    );
+
     public String sampleCall() {
         final SampleRequest sampleRequest = SampleRequest.newBuilder()
                 .setUserId("levi.yoon")
@@ -41,6 +47,15 @@ public class GrpcClient {
                 log.info("GrpcClient#sampleCall - onCompleted");
             }
         });
+        return "string";
+    }
+
+    public String sampleBlockingCall() {
+        final SampleRequest sampleRequest = SampleRequest.newBuilder()
+                .setUserId("levi.yoon")
+                .setMessage("grpc request")
+                .build();
+        blockingStub.sampleCall(sampleRequest);
         return "string";
     }
 }
